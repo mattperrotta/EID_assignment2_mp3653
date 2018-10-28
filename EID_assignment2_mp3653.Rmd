@@ -1,0 +1,58 @@
+---
+title: "EID_assignment2_mp3653"
+author: "Matthew Perrotta"
+date: "October 28, 2018"
+output: html_document
+---
+
+### Load Packages
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+### Import Data
+```{r}
+flu = read_excel('./data/flusurv-2018.xlsx') %>% 
+  janitor::clean_names() %>% 
+  mutate(study_id1 = str_replace(study_id1, 'XX-XXX-', ''))
+```
+
+# Problem 1
+```{r}
+flu2 = flu %>% 
+  group_by(month1, year1) %>% 
+  summarise(month_sum = sum(flu_pos, na.rm = T))
+
+flu2 %>% 
+  group_by(month1) %>% 
+  summarise(mean_cases = mean(month_sum))
+```
+
+```{r}
+flu %>%
+  filter(year1 == 2012, 
+         month1 %in% c(7, 8, 9, 10, 11, 12),
+         flu_b == 1) %>% 
+  summarise(sum = sum(flu_b))
+  
+
+flu %>%
+  filter(year1 == 2013, 
+         month1 %in% c(1, 2, 3, 4, 5, 6),
+         flu_b == 1) %>% 
+  summarise(sum = sum(flu_b))
+```
+
+```{r}
+flu_new = read_excel('./data/flusurv-2018.xlsx', sheet = 'New 2014 Data') %>% 
+  janitor::clean_names() %>% 
+  mutate(study_id1 = str_replace(study_id1, 'XX-XXX-', ''))
+```
+
+```{r}
+flu_new %>% 
+  group_by(epi_week) %>% 
+  summarise(flu_sum = sum(flu_pos, na.rm = T))
+```
+
